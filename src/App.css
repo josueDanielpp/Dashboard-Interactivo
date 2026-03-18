@@ -1,0 +1,479 @@
+:root {
+  color-scheme: light;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #18212f;
+  background: #eef2f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, #f7f9fc 0%, #eef2f6 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.pagina-dashboard {
+  width: min(1380px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 14px 0 28px;
+}
+
+.barra-superior {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #d7dee8;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.marca-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.marca-dashboard strong {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  color: #1e293b;
+}
+
+.marca-dashboard span {
+  color: #667085;
+  font-size: 0.96rem;
+}
+
+.navegacion-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+
+.navegacion-dashboard__item {
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #475467;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navegacion-dashboard__item--activo {
+  background: #162033;
+  color: #ffffff;
+}
+
+.barra-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0 16px;
+}
+
+.chip-filtro {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #d7dee8;
+  color: #344054;
+  font-size: 0.92rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.chip-filtro--estado {
+  margin-left: auto;
+  color: #027a48;
+  background: #ecfdf3;
+  border-color: #a6f4c5;
+}
+
+.seccion-grid {
+  padding-bottom: 12px;
+}
+
+.layout {
+  min-height: 520px;
+}
+
+.react-grid-item {
+  transition: transform 220ms ease;
+}
+
+.react-grid-item.react-grid-placeholder {
+  border-radius: 20px;
+  background: rgba(50, 116, 255, 0.12);
+  border: 1px dashed rgba(50, 116, 255, 0.5);
+}
+
+.panel-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #d7dee8;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.panel-dashboard__encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e6ebf1;
+  background: #ffffff;
+  cursor: move;
+}
+
+.panel-dashboard__etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #175cd3;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.panel-dashboard__titulo {
+  margin: 10px 0 0;
+  color: #1d2939;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.panel-dashboard__accion {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #344054;
+  font-size: 1.1rem;
+}
+
+.panel-dashboard__contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.panel-dashboard__descripcion {
+  margin: 0;
+  color: #667085;
+  max-width: 60ch;
+  font-size: 0.92rem;
+}
+
+.vista-mapa {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255, 198, 91, 0.8), transparent 2.3%),
+    radial-gradient(circle at 22% 45%, rgba(71, 186, 104, 0.86), transparent 2.2%),
+    radial-gradient(circle at 32% 54%, rgba(255, 172, 52, 0.84), transparent 2%),
+    radial-gradient(circle at 44% 74%, rgba(55, 177, 88, 0.9), transparent 2.6%),
+    radial-gradient(circle at 64% 80%, rgba(255, 98, 0, 0.85), transparent 2.8%),
+    radial-gradient(circle at 59% 69%, rgba(71, 186, 104, 0.8), transparent 2%),
+    linear-gradient(90deg, #97d5f9 0%, #97d5f9 42%, #f2f5f8 42%, #f2f5f8 100%);
+}
+
+.vista-mapa::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(transparent 96%, rgba(120, 138, 160, 0.15) 96%),
+    linear-gradient(90deg, transparent 96%, rgba(120, 138, 160, 0.15) 96%);
+  background-size: 80px 80px;
+  opacity: 0.28;
+}
+
+.vista-mapa__puntos {
+  position: absolute;
+  border-left: 3px solid rgba(41, 52, 73, 0.55);
+  border-bottom: 3px solid rgba(41, 52, 73, 0.55);
+  border-radius: 0 0 0 28px;
+}
+
+.vista-mapa__puntos--norte {
+  top: 6%;
+  left: 42%;
+  width: 24%;
+  height: 26%;
+  transform: rotate(6deg);
+}
+
+.vista-mapa__puntos--centro {
+  top: 28%;
+  left: 46%;
+  width: 18%;
+  height: 38%;
+  transform: rotate(16deg);
+}
+
+.vista-mapa__puntos--sur {
+  top: 63%;
+  left: 57%;
+  width: 13%;
+  height: 22%;
+  transform: rotate(32deg);
+}
+
+.vista-mapa__leyenda {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #344054;
+  font-size: 0.82rem;
+}
+
+.vista-mapa__leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.indicador {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.indicador--verde {
+  background: #55b56c;
+}
+
+.indicador--amarillo {
+  background: #f4c542;
+}
+
+.indicador--naranja {
+  background: #f59e0b;
+}
+
+.vista-tabla {
+  display: grid;
+  gap: 10px;
+  overflow: auto;
+}
+
+.vista-tabla__fila {
+  display: grid;
+  grid-template-columns: 90px minmax(180px, 1fr) 44px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #475467;
+}
+
+.vista-tabla__fila strong {
+  color: #1d2939;
+}
+
+.vista-barras {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+  min-height: 100%;
+}
+
+.vista-barras__columna {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.vista-barras__valor {
+  color: #344054;
+  font-weight: 700;
+}
+
+.barra {
+  width: 100%;
+  max-width: 110px;
+  border-radius: 16px 16px 10px 10px;
+  min-height: 120px;
+  box-shadow: inset 0 -12px 24px rgba(255, 255, 255, 0.2);
+}
+
+.barra--amarilla {
+  height: 70%;
+  background: linear-gradient(180deg, #ffd456 0%, #f4c542 100%);
+}
+
+.barra--naranja {
+  height: 69%;
+  background: linear-gradient(180deg, #ffc164 0%, #f59e0b 100%);
+}
+
+.barra--verde {
+  height: 74%;
+  background: linear-gradient(180deg, #6fcb76 0%, #55b56c 100%);
+}
+
+.vista-barras__etiqueta {
+  color: #667085;
+  font-size: 0.88rem;
+}
+
+.vista-apilada {
+  display: grid;
+  gap: 14px;
+}
+
+.vista-apilada__fila {
+  display: grid;
+  gap: 8px;
+}
+
+.vista-apilada__nombre {
+  color: #344054;
+  font-weight: 600;
+}
+
+.vista-apilada__barra {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.vista-apilada__segmento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.vista-apilada__segmento--naranja {
+  background: #f8b44b;
+}
+
+.vista-apilada__segmento--verde {
+  background: #71c275;
+}
+
+.vista-metricas {
+  display: grid;
+  gap: 12px;
+}
+
+.tarjeta-metrica {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e6ebf1;
+}
+
+.tarjeta-metrica span,
+.tarjeta-metrica small {
+  color: #667085;
+}
+
+.tarjeta-metrica strong {
+  font-size: 1.6rem;
+  color: #1d2939;
+}
+
+@media (max-width: 900px) {
+  .pagina-dashboard {
+    width: min(100% - 24px, 960px);
+    padding-top: 12px;
+  }
+
+  .barra-superior {
+    grid-template-columns: 1fr;
+  }
+
+  .navegacion-dashboard {
+    justify-self: start;
+    flex-wrap: wrap;
+  }
+
+  .chip-filtro--estado {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .pagina-dashboard {
+    width: min(100% - 16px, 720px);
+  }
+
+  .barra-superior {
+    padding: 16px;
+  }
+
+  .marca-dashboard strong {
+    font-size: 1.55rem;
+  }
+
+  .panel-dashboard__encabezado {
+    padding: 12px 14px;
+  }
+
+  .panel-dashboard__contenido {
+    padding: 16px 14px;
+  }
+
+  .vista-tabla__fila {
+    grid-template-columns: 1fr;
+  }
+
+  .vista-barras {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .barra {
+    max-width: none;
+    min-height: 72px;
+  }
+}
