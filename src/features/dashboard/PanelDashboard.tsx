@@ -1,4 +1,5 @@
 import type { DefinicionPanel } from './tipos';
+import { MapaActividadEconomica } from './MapaActividadEconomica';
 
 interface PanelDashboardProps {
   panel: DefinicionPanel;
@@ -12,10 +13,6 @@ export function PanelDashboard({ panel }: PanelDashboardProps) {
           <span className="panel-dashboard__etiqueta">{panel.etiqueta}</span>
           <h2 className="panel-dashboard__titulo">{panel.titulo}</h2>
         </div>
-
-        <button className="panel-dashboard__accion" type="button" aria-label={`Expandir ${panel.titulo}`}>
-          +
-        </button>
       </header>
 
       <div className="panel-dashboard__contenido">
@@ -28,18 +25,7 @@ export function PanelDashboard({ panel }: PanelDashboardProps) {
 
 function VistaPanel({ panel }: PanelDashboardProps) {
   if (panel.variante === 'mapa') {
-    return (
-      <div className="vista-mapa">
-        <div className="vista-mapa__puntos vista-mapa__puntos--norte" />
-        <div className="vista-mapa__puntos vista-mapa__puntos--centro" />
-        <div className="vista-mapa__puntos vista-mapa__puntos--sur" />
-        <div className="vista-mapa__leyenda">
-          <span><i className="indicador indicador--verde" /> Comercio</span>
-          <span><i className="indicador indicador--amarillo" /> Servicios</span>
-          <span><i className="indicador indicador--naranja" /> Industria</span>
-        </div>
-      </div>
-    );
+    return <MapaActividadEconomica />;
   }
 
   if (panel.variante === 'tabla') {
