@@ -477,3 +477,18 @@ select {
     min-height: 72px;
   }
 }
+
+.navegacion-dashboard__salir {
+  border: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #fee4e2;
+  color: #b42318;
+  font-weight: 700;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.navegacion-dashboard__salir:hover {
+  transform: translateY(-1px);
+}

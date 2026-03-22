@@ -34,9 +34,9 @@ function VistaPanel({ panel }: PanelDashboardProps) {
         <div className="vista-mapa__puntos vista-mapa__puntos--centro" />
         <div className="vista-mapa__puntos vista-mapa__puntos--sur" />
         <div className="vista-mapa__leyenda">
-          <span><i className="indicador indicador--verde" /> Clientes</span>
-          <span><i className="indicador indicador--amarillo" /> Detectados</span>
-          <span><i className="indicador indicador--naranja" /> Prospectos</span>
+          <span><i className="indicador indicador--verde" /> Comercio</span>
+          <span><i className="indicador indicador--amarillo" /> Servicios</span>
+          <span><i className="indicador indicador--naranja" /> Industria</span>
         </div>
       </div>
     );
@@ -46,16 +46,16 @@ function VistaPanel({ panel }: PanelDashboardProps) {
     return (
       <div className="vista-tabla">
         {[
-          ['Detectado', 'Refaccionaria Danielio', 'Cor'],
-          ['Detectado', 'Taller Electromecanico Romeros', 'Rep'],
-          ['Detectado', 'Taller Mecanico Torres', 'Rep'],
-          ['Cliente', 'Refaccionaria Topes Master', 'Cor'],
-          ['Prospecto', 'Colosion Gonzalez', 'Cor'],
-        ].map(([estado, negocio, categoria]) => (
-          <div key={negocio} className="vista-tabla__fila">
-            <span>{estado}</span>
-            <strong>{negocio}</strong>
-            <span>{categoria}</span>
+          ['Aguascalientes', 'Comercio al por menor', 'Mediana'],
+          ['Jesus Maria', 'Servicios de preparacion de alimentos', 'Micro'],
+          ['Aguascalientes', 'Fabricacion de autopartes', 'Grande'],
+          ['San Francisco de los Romo', 'Logistica y almacenamiento', 'Pequena'],
+          ['Calvillo', 'Alojamiento temporal y turismo', 'Micro'],
+        ].map(([municipio, sector, tamano]) => (
+          <div key={`${municipio}-${sector}`} className="vista-tabla__fila">
+            <span>{municipio}</span>
+            <strong>{sector}</strong>
+            <span>{tamano}</span>
           </div>
         ))}
       </div>
@@ -64,9 +64,9 @@ function VistaPanel({ panel }: PanelDashboardProps) {
 
   if (panel.variante === 'barras') {
     const barras = [
-      { etiqueta: 'Detectados', valor: 542, clase: 'barra barra--amarilla' },
-      { etiqueta: 'Prospectos', valor: 539, clase: 'barra barra--naranja' },
-      { etiqueta: 'Clientes', valor: 546, clase: 'barra barra--verde' },
+      { etiqueta: 'Servicios', valor: 842, clase: 'barra barra--amarilla' },
+      { etiqueta: 'Industria', valor: 516, clase: 'barra barra--naranja' },
+      { etiqueta: 'Comercio', valor: 934, clase: 'barra barra--verde' },
     ];
 
     return (
@@ -84,9 +84,9 @@ function VistaPanel({ panel }: PanelDashboardProps) {
 
   if (panel.variante === 'apilado') {
     const filas = [
-      { etiqueta: 'Sinaloa', clientes: 263, prospectos: 283 },
-      { etiqueta: 'Jalisco', clientes: 283, prospectos: 256 },
-      { etiqueta: 'Sonora', clientes: 241, prospectos: 228 },
+      { etiqueta: 'Aguascalientes', clientes: 1280, prospectos: 910 },
+      { etiqueta: 'Jesus Maria', clientes: 420, prospectos: 265 },
+      { etiqueta: 'San Francisco de los Romo', clientes: 310, prospectos: 188 },
     ];
 
     return (
@@ -111,9 +111,9 @@ function VistaPanel({ panel }: PanelDashboardProps) {
   return (
     <div className="vista-metricas">
       {[
-        ['Cobertura', '82%', '+4.8%'],
-        ['Seguimiento', '317', '+12'],
-        ['Alertas', '09', '-2'],
+        ['Unidades visibles', '2,190', '+6.4%'],
+        ['Municipios con actividad', '11', '100%'],
+        ['Sector dominante', 'Comercio', '42%'],
       ].map(([nombre, valor, delta]) => (
         <article key={nombre} className="tarjeta-metrica">
           <span>{nombre}</span>

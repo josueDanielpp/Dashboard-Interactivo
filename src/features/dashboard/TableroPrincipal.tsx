@@ -4,35 +4,42 @@ import 'react-resizable/css/styles.css';
 import { disposicionesResponsivas, panelesIniciales } from './datosIniciales';
 import { PanelDashboard } from './PanelDashboard';
 
-export function TableroPrincipal() {
+interface TableroPrincipalProps {
+  onCerrarSesion: () => void;
+}
+
+export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
   const { containerRef, mounted, width } = useContainerWidth({ initialWidth: 1200 });
 
   return (
     <main className="pagina-dashboard">
       <header className="barra-superior">
         <div className="marca-dashboard">
-          <strong>Geo Business</strong>
-          <span>Panel de inteligencia comercial</span>
+          <strong>Aguascalientes Económico</strong>
+          <span>Dashboard interactivo de actividad económica estatal</span>
         </div>
 
         <nav className="navegacion-dashboard" aria-label="Navegacion principal">
           <a className="navegacion-dashboard__item navegacion-dashboard__item--activo" href="/">
-            Indicadores
+            Panorama
           </a>
           <a className="navegacion-dashboard__item" href="/">
-            Prospeccion
+            Sectores
           </a>
           <a className="navegacion-dashboard__item" href="/">
-            Ventas
+            Territorio
           </a>
+          <button className="navegacion-dashboard__salir" onClick={onCerrarSesion} type="button">
+            Cerrar sesion
+          </button>
         </nav>
       </header>
 
       <section className="barra-filtros">
-        <div className="chip-filtro">Periodo: Ultimos 30 dias</div>
-        <div className="chip-filtro">Region: Occidente</div>
-        <div className="chip-filtro">Categoria: Refacciones</div>
-        <div className="chip-filtro chip-filtro--estado">Actualizacion en linea</div>
+        <div className="chip-filtro">Fuente: DENUE</div>
+        <div className="chip-filtro">Cobertura: Estado de Aguascalientes</div>
+        <div className="chip-filtro">Corte: Muestra inicial</div>
+        <div className="chip-filtro chip-filtro--estado">GeoNode disponible para capas territoriales</div>
       </section>
 
       <section ref={containerRef} className="seccion-grid">
@@ -46,7 +53,7 @@ export function TableroPrincipal() {
             margin={[16, 16]}
             width={width}
             dragConfig={{ handle: '.panel-dashboard__encabezado', enabled: true }}
-            resizeConfig={{ enabled: true }}
+            resizeConfig={{ enabled: false }}
           >
             {panelesIniciales.map((panel) => (
               <div key={panel.id}>

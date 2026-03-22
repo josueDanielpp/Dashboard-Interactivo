@@ -1,5 +1,9 @@
 import { TableroPrincipal } from '../features/dashboard/TableroPrincipal';
 
-export function PaginaDashboard() {
-  return <TableroPrincipal />;
+interface PaginaDashboardProps {
+  onCerrarSesion: () => void;
+}
+
+export function PaginaDashboard({ onCerrarSesion }: PaginaDashboardProps) {
+  return <TableroPrincipal onCerrarSesion={onCerrarSesion} />;
 }
