@@ -7,6 +7,7 @@ import { PaginaDashboard } from './pages/PaginaDashboard';
 const CLAVE_SESION = 'dashboard-auth';
 const USUARIO_DEMO = 'reclutador@aguascalientes.mx';
 const PASSWORD_DEMO = 'DashboardAgs2026!';
+const CLAVE_TOKEN = import.meta.env.VITE_AUTH_TOKEN_KEY;
 
 function App() {
   const [correo, setCorreo] = useState('');
@@ -23,6 +24,7 @@ function App() {
 
     if (correo === USUARIO_DEMO && contrasena === PASSWORD_DEMO) {
       localStorage.setItem(CLAVE_SESION, 'ok');
+      sessionStorage.setItem(CLAVE_TOKEN, 'demo-token-dashboard');
       setSesionActiva(true);
       setError('');
       return;
@@ -33,6 +35,7 @@ function App() {
 
   function cerrarSesion() {
     localStorage.removeItem(CLAVE_SESION);
+    sessionStorage.removeItem(CLAVE_TOKEN);
     setSesionActiva(false);
     setContrasena('');
   }
