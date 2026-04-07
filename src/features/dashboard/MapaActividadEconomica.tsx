@@ -23,7 +23,7 @@ import {
   type MapaGeoserver,
 } from '../../services/dashboardService';
 
-type PanelMapa = 'capas' | 'dibujar' | 'identificar' | 'simbologia' | 'fondo';
+type PanelMapa = 'capas' | 'dibujar' | 'identificar' | 'fondo';
 type FondoMapa = 'osm' | 'claro' | 'oscuro';
 
 interface CapaMapa {
@@ -332,7 +332,7 @@ export function MapaActividadEconomica({
       capaWmsRef.current = null;
     }
 
-    const capasVisiblesIniciales = obtenerCapasWmsVisibles(capasMapa, capasVisibles);
+    const capasVisiblesIniciales = capasMapa.map((capa) => capa.nombre);
 
     if (capasVisiblesIniciales.length === 0) {
       return;
@@ -602,13 +602,6 @@ export function MapaActividadEconomica({
           >
             Identificar
           </button>
-          {/* <button
-            className={panelActivo === 'simbologia' ? 'mapa-tab mapa-tab--activo' : 'mapa-tab'}
-            onClick={() => setPanelActivo('simbologia')}
-            type="button"
-          >
-            Simbologia
-          </button> */}
           <button
             className={panelActivo === 'fondo' ? 'mapa-tab mapa-tab--activo' : 'mapa-tab'}
             onClick={() => setPanelActivo('fondo')}
@@ -682,18 +675,7 @@ export function MapaActividadEconomica({
                 >
                   {modoIdentificarActivo ? 'Desactivar identificar' : 'Activar identificar'}
                 </button>
-              </div>
-            ) : null}
-
-            {panelActivo === 'simbologia' ? (
-              <div className="mapa-bloque">
-                <h3>Simbologia</h3>
-                <div className="mapa-simbologia">
-                  {capasMapa.map((capa) => (
-                    <span key={capa.nombre}>{capa.alias}</span>
-                  ))}
-                  <span><i className="indicador indicador--rojo" /> Area dibujada</span>
-                </div>
+                <small>La identificación es puntual y no modifica los filtros activos de las gráficas.</small>
               </div>
             ) : null}
 

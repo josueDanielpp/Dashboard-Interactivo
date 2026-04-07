@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import * as echarts from 'echarts';
+import * as echarts from 'echarts/core';
+import { BarChart } from 'echarts/charts';
+import { DataZoomComponent, GridComponent, TooltipComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
 import type { DefinicionPanel } from './tipos';
 import { MapaActividadEconomica } from './MapaActividadEconomica';
 import {
@@ -11,6 +14,8 @@ import {
   type MunicipioEstablecimientos,
   type ScianEstablecimientos,
 } from '../../services/dashboardService';
+
+echarts.use([BarChart, GridComponent, TooltipComponent, DataZoomComponent, CanvasRenderer]);
 
 interface PanelDashboardProps {
   filtroGeografico: FiltroGeograficoRequest | null;

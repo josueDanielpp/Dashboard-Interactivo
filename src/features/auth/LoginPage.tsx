@@ -19,31 +19,35 @@ export function LoginPage({
   onCambiarCorreo,
   onSubmit,
 }: LoginPageProps) {
+  const mostrarAccesoDemo = import.meta.env.VITE_ENABLE_DEMO_LOGIN === 'true';
+
   return (
     <main className="pantalla-login">
       <section
         className="login-hero"
         style={{
-          backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.58), rgba(20, 33, 61, 0.58)), url(${fondoAguascalientes})`,
+          backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.38), rgba(20, 33, 61, 0.42)), url(${fondoAguascalientes})`,
         }}
       >
-        <span className="login-hero__eyebrow">Acceso restringido</span>
-        <h1>Dashboard de actividad economica de Aguascalientes</h1>
+        <span className="login-hero__eyebrow">Proyecto de análisis territorial</span>
+        <h1>Dashboard de actividad económica de Aguascalientes</h1>
         <p>
-          Esta version del portafolio requiere autenticacion previa antes de mostrar el tablero
-          interactivo.
+          Plataforma interactiva para explorar concentración territorial, distribución por municipio
+          y comportamiento por giro SCIAN a partir de datos del DENUE.
         </p>
-        <div className="login-hero__demo">
-          <strong>Acceso demo</strong>
-          <span>Usuario: reclutador@aguascalientes.mx</span>
-          <span>Contrasena: DashboardAgs2026!</span>
-        </div>
+        {mostrarAccesoDemo ? (
+          <div className="login-hero__demo">
+            <strong>Acceso de evaluación</strong>
+            <span>Usuario: reclutador@aguascalientes.mx</span>
+            <span>Contraseña: DashboardAgs2026!</span>
+          </div>
+        ) : null}
       </section>
 
       <section className="panel-login">
         <div>
-          <span className="panel-login__etiqueta">Login</span>
-          <h2>Iniciar sesion</h2>
+          <span className="panel-login__etiqueta">Acceso</span>
+          <h2>Iniciar sesión</h2>
           <p>Ingresa para acceder al dashboard interactivo.</p>
         </div>
 
@@ -61,7 +65,7 @@ export function LoginPage({
           </label>
 
           <label className="campo-login">
-            <span>Contrasena</span>
+            <span>Contraseña</span>
             <input
               autoComplete="current-password"
               disabled={enviando}

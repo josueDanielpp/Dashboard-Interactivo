@@ -1,5 +1,4 @@
 .pantalla-login {
-  
   display: grid;
   grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 460px);
   gap: 24px;

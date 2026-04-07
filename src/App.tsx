@@ -121,7 +121,15 @@ function App() {
         position="top-right"
         theme="colored"
       />
-      {validandoSesion ? null : sesionActiva ? (
+      {validandoSesion ? (
+        <main className="estado-app">
+          <section className="estado-app__panel">
+            <span className="estado-app__eyebrow">Aguascalientes Económico</span>
+            <h1>Restaurando sesión</h1>
+            <p>Verificando credenciales y preparando el dashboard interactivo.</p>
+          </section>
+        </main>
+      ) : sesionActiva ? (
         <PaginaDashboard onCerrarSesion={cerrarSesion} />
       ) : (
         <LoginPage

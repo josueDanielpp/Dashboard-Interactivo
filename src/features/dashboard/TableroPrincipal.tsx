@@ -13,6 +13,7 @@ interface TableroPrincipalProps {
 export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
   const { containerRef, mounted, width } = useContainerWidth({ initialWidth: 1200 });
   const [filtroGeografico, setFiltroGeografico] = useState<FiltroGeograficoRequest | null>(null);
+  const resumenFiltro = filtroGeografico?.wkt ? 'Filtro espacial: polígono activo' : 'Filtro espacial: sin selección';
 
   return (
     <main className="pagina-dashboard">
@@ -23,9 +24,8 @@ export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
         </div>
 
         <nav className="navegacion-dashboard" aria-label="Navegacion principal">
-          
           <button className="navegacion-dashboard__salir" onClick={onCerrarSesion} type="button">
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </nav>
       </header>
@@ -33,7 +33,7 @@ export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
       <section className="barra-filtros">
         <div className="chip-filtro">Fuente: DENUE</div>
         <div className="chip-filtro">Cobertura: Estado de Aguascalientes</div>
-        <div className="chip-filtro">Corte: Muestra inicial</div>
+        <div className="chip-filtro">{resumenFiltro}</div>
         <div className="chip-filtro chip-filtro--estado">GeoNode disponible para capas territoriales</div>
       </section>
 
