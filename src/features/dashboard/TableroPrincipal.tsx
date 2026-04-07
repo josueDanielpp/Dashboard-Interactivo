@@ -20,15 +20,7 @@ export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
         </div>
 
         <nav className="navegacion-dashboard" aria-label="Navegacion principal">
-          <a className="navegacion-dashboard__item navegacion-dashboard__item--activo" href="/">
-            Panorama
-          </a>
-          <a className="navegacion-dashboard__item" href="/">
-            Sectores
-          </a>
-          <a className="navegacion-dashboard__item" href="/">
-            Territorio
-          </a>
+          
           <button className="navegacion-dashboard__salir" onClick={onCerrarSesion} type="button">
             Cerrar sesion
           </button>

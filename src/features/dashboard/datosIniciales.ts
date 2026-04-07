@@ -10,8 +10,8 @@ export const panelesIniciales: DefinicionPanel[] = [
   },
   {
     id: 'listado',
-    titulo: 'Establecimientos destacados',
-    descripcion: 'Muestra de unidades economicas para revisar sector, tamano y municipio dentro del estado.',
+    titulo: 'Establecimientos por municipio',
+    descripcion: 'Comparativa de establecimientos del DENUE por municipio en el estado.',
     etiqueta: 'Directorio',
     variante: 'tabla',
   },

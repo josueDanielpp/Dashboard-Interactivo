@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
+import * as echarts from 'echarts';
 import type { DefinicionPanel } from './tipos';
 import { MapaActividadEconomica } from './MapaActividadEconomica';
+import { obtenerMunicipiosEstablecimientos, type MunicipioEstablecimientos } from '../../services/dashboardService';
 
 interface PanelDashboardProps {
   panel: DefinicionPanel;
@@ -29,23 +32,7 @@ function VistaPanel({ panel }: PanelDashboardProps) {
   }
 
   if (panel.variante === 'tabla') {
-    return (
-      <div className="vista-tabla">
-        {[
-          ['Aguascalientes', 'Comercio al por menor', 'Mediana'],
-          ['Jesus Maria', 'Servicios de preparacion de alimentos', 'Micro'],
-          ['Aguascalientes', 'Fabricacion de autopartes', 'Grande'],
-          ['San Francisco de los Romo', 'Logistica y almacenamiento', 'Pequena'],
-          ['Calvillo', 'Alojamiento temporal y turismo', 'Micro'],
-        ].map(([municipio, sector, tamano]) => (
-          <div key={`${municipio}-${sector}`} className="vista-tabla__fila">
-            <span>{municipio}</span>
-            <strong>{sector}</strong>
-            <span>{tamano}</span>
-          </div>
-        ))}
-      </div>
-    );
+    return <GraficaEstablecimientos />;
   }
 
   if (panel.variante === 'barras') {
@@ -107,6 +94,158 @@ function VistaPanel({ panel }: PanelDashboardProps) {
           <small>{delta}</small>
         </article>
       ))}
+    </div>
+  );
+}
+
+function GraficaEstablecimientos() {
+  const contenedorRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<echarts.EChartsType | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const [datos, setDatos] = useState<MunicipioEstablecimientos[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let activa = true;
+
+    async function cargarDatos() {
+      try {
+        setCargando(true);
+        setError(false);
+        const response = await obtenerMunicipiosEstablecimientos();
+        if (!activa) {
+          return;
+        }
+        const payload = Array.isArray(response) ? response : response?.data ?? [];
+        setDatos(payload);
+      } catch {
+        if (activa) {
+          setError(true);
+        }
+      } finally {
+        if (activa) {
+          setCargando(false);
+        }
+      }
+    }
+
+    void cargarDatos();
+
+    return () => {
+      activa = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const contenedor = contenedorRef.current;
+
+    if (!contenedor) {
+      return;
+    }
+
+    let chart = chartRef.current;
+
+    if (!chart) {
+      chart = echarts.init(contenedor);
+      chartRef.current = chart;
+    }
+
+    if (!resizeObserverRef.current) {
+      const resizeObserver = new ResizeObserver(() => {
+        chart?.resize();
+      });
+      resizeObserver.observe(contenedor);
+      resizeObserverRef.current = resizeObserver;
+    }
+
+    const datosOrdenados = [...datos].sort(
+      (a, b) => b.total_establecimientos - a.total_establecimientos,
+    );
+    const categorias = datosOrdenados.map((item) => item.nombre);
+    const valores = datosOrdenados.map((item) => item.total_establecimientos);
+    const formatNumber = new Intl.NumberFormat('es-MX');
+
+    chart.setOption(
+      {
+        animationDuration: 500,
+        grid: { top: 8, right: 16, bottom: 22, left: 130, containLabel: false },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' },
+          formatter: (params: Array<{ name: string; value: number }>) => {
+            if (!params.length) {
+              return '';
+            }
+            const { name, value } = params[0];
+            return `${name}: ${formatNumber.format(value)}`;
+          },
+        },
+        xAxis: {
+          type: 'value',
+          axisLabel: {
+            color: '#667085',
+            formatter: (valor: number) => formatNumber.format(valor),
+          },
+          splitLine: { lineStyle: { color: '#eef2f6' } },
+        },
+        yAxis: {
+          type: 'category',
+          data: categorias,
+          axisTick: { show: false },
+          axisLine: { show: false },
+          axisLabel: { color: '#344054', fontWeight: 600 },
+        },
+        series: [
+          {
+            type: 'bar',
+            data: valores,
+            barWidth: 20,
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                { offset: 0, color: '#175cd3' },
+                { offset: 1, color: '#7aa2f5' },
+              ]),
+              borderRadius: [10, 10, 10, 10],
+            },
+            label: {
+              show: true,
+              position: 'right',
+              color: '#101828',
+              fontWeight: 600,
+              formatter: (params: { value: number }) => formatNumber.format(params.value),
+            },
+          },
+        ],
+      },
+      true,
+    );
+  }, [datos]);
+
+  useEffect(() => {
+    return () => {
+      resizeObserverRef.current?.disconnect();
+      resizeObserverRef.current = null;
+      chartRef.current?.dispose();
+      chartRef.current = null;
+    };
+  }, []);
+
+  if (cargando) {
+    return <div className="vista-tabla vista-tabla--grafica">Cargando establecimientos...</div>;
+  }
+
+  if (error) {
+    return <div className="vista-tabla vista-tabla--grafica">No fue posible cargar la grafica.</div>;
+  }
+
+  if (datos.length === 0) {
+    return <div className="vista-tabla vista-tabla--grafica">No hay datos disponibles.</div>;
+  }
+
+  return (
+    <div className="vista-tabla vista-tabla--grafica">
+      <div className="vista-grafica" ref={contenedorRef} />
     </div>
   );
 }

@@ -5,11 +5,7 @@ import './login.css';
 interface LoginPageProps {
   correo: string;
   contrasena: string;
-  credencialesDemo: {
-    usuario: string;
-    contrasena: string;
-  };
-  error: string;
+  enviando: boolean;
   onCambiarContrasena: (valor: string) => void;
   onCambiarCorreo: (valor: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -18,8 +14,7 @@ interface LoginPageProps {
 export function LoginPage({
   correo,
   contrasena,
-  credencialesDemo,
-  error,
+  enviando,
   onCambiarContrasena,
   onCambiarCorreo,
   onSubmit,
@@ -40,8 +35,8 @@ export function LoginPage({
         </p>
         <div className="login-hero__demo">
           <strong>Acceso demo</strong>
-          <span>Usuario: {credencialesDemo.usuario}</span>
-          <span>Contrasena: {credencialesDemo.contrasena}</span>
+          <span>Usuario: reclutador@aguascalientes.mx</span>
+          <span>Contrasena: DashboardAgs2026!</span>
         </div>
       </section>
 
@@ -57,6 +52,7 @@ export function LoginPage({
             <span>Correo</span>
             <input
               autoComplete="username"
+              disabled={enviando}
               onChange={(event) => onCambiarCorreo(event.target.value)}
               placeholder="reclutador@aguascalientes.mx"
               type="email"
@@ -68,17 +64,15 @@ export function LoginPage({
             <span>Contrasena</span>
             <input
               autoComplete="current-password"
+              disabled={enviando}
               onChange={(event) => onCambiarContrasena(event.target.value)}
-              placeholder="Ingresa la contrasena"
+              placeholder="DashboardAgs2026!"
               type="password"
               value={contrasena}
             />
           </label>
-
-          {error ? <p className="formulario-login__error">{error}</p> : null}
-
-          <button className="formulario-login__boton" type="submit">
-            Entrar al dashboard
+          <button className="formulario-login__boton" disabled={enviando} type="submit">
+            {enviando ? 'Validando acceso...' : 'Entrar al dashboard'}
           </button>
         </form>
       </section>

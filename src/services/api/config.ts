@@ -33,6 +33,9 @@ function createService<TData = unknown>(
 }
 
 export const Config = {
+  Auth: {
+    Login: <TData>(data: TData) => createService('POST', '/v1/auth/login', data),
+  },
   Cliente: {
     GetClientes: createService('GET', '/cliente/clientes'),
     GetAllClientes: () => createService('GET', '/cliente/clientes/noPaginado'),
@@ -44,6 +47,14 @@ export const Config = {
   Dashboard: {
     GetResumen: createService('GET', '/dashboard/resumen'),
     GetActividadEconomica: () => createService('GET', '/dashboard/actividad-economica'),
+  },
+  Maps: {
+    GetMaps: createService('GET', '/v1/maps'),
+    GetMapById: (id: string | number) => createService('GET', `/v1/maps/${id}`),
+  },
+  GeoNode: {
+    Identify: <TData>(data: TData) => createService('POST', '/v1/geonode/identify', data),
+    GetMunicipiosEstablecimientos: createService('GET', '/v1/geonode/municipios/establecimientos'),
   },
 };
 
