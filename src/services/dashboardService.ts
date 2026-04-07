@@ -36,6 +36,18 @@ export interface MunicipioEstablecimientosResponse {
   data: MunicipioEstablecimientos[];
 }
 
+export interface ScianEstablecimientos {
+  nombre: string;
+  cantidad: number;
+}
+
+export interface ScianEstablecimientosResponse {
+  schema: string;
+  table: string;
+  relatedTable: string;
+  data: ScianEstablecimientos[];
+}
+
 export type IdentifyResponse = Record<string, unknown>;
 export type MapasGeoserverResponse =
   | MapaGeoserver[]
@@ -61,6 +73,10 @@ export function obtenerMapasGeoserver() {
   return apiUtils<MapasGeoserverResponse>(Config.Maps.GetMaps);
 }
 
+export function obtenerSldMapa(id: string | number) {
+  return apiUtils<string>(Config.Maps.GetMapSld(id));
+}
+
 export function identificarEnGeoNode(payload: IdentifyRequest) {
   return apiUtils<IdentifyResponse, IdentifyRequest>(Config.GeoNode.Identify(payload));
 }
@@ -68,5 +84,11 @@ export function identificarEnGeoNode(payload: IdentifyRequest) {
 export function obtenerMunicipiosEstablecimientos() {
   return apiUtils<MunicipioEstablecimientosResponse | MunicipioEstablecimientos[]>(
     Config.GeoNode.GetMunicipiosEstablecimientos,
+  );
+}
+
+export function obtenerScianEstablecimientos() {
+  return apiUtils<ScianEstablecimientosResponse | ScianEstablecimientos[]>(
+    Config.GeoNode.GetScianEstablecimientos,
   );
 }

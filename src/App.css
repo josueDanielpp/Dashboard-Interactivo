@@ -618,6 +618,18 @@ select {
   min-height: 100%;
 }
 
+.vista-barras--grafica {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 240px;
+  color: #667085;
+  font-weight: 600;
+  text-align: center;
+}
+
 .vista-barras__columna {
   display: grid;
   gap: 10px;

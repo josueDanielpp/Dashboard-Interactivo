@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import type { DefinicionPanel } from './tipos';
 import { MapaActividadEconomica } from './MapaActividadEconomica';
-import { obtenerMunicipiosEstablecimientos, type MunicipioEstablecimientos } from '../../services/dashboardService';
+import {
+  obtenerMunicipiosEstablecimientos,
+  obtenerScianEstablecimientos,
+  type MunicipioEstablecimientos,
+  type ScianEstablecimientos,
+} from '../../services/dashboardService';
 
 interface PanelDashboardProps {
   panel: DefinicionPanel;
@@ -36,23 +41,7 @@ function VistaPanel({ panel }: PanelDashboardProps) {
   }
 
   if (panel.variante === 'barras') {
-    const barras = [
-      { etiqueta: 'Servicios', valor: 842, clase: 'barra barra--amarilla' },
-      { etiqueta: 'Industria', valor: 516, clase: 'barra barra--naranja' },
-      { etiqueta: 'Comercio', valor: 934, clase: 'barra barra--verde' },
-    ];
-
-    return (
-      <div className="vista-barras">
-        {barras.map((barra) => (
-          <div key={barra.etiqueta} className="vista-barras__columna">
-            <span className="vista-barras__valor">{barra.valor}</span>
-            <div className={barra.clase} />
-            <span className="vista-barras__etiqueta">{barra.etiqueta}</span>
-          </div>
-        ))}
-      </div>
-    );
+    return <GraficaScianEstablecimientos />;
   }
 
   if (panel.variante === 'apilado') {
@@ -200,7 +189,7 @@ function GraficaEstablecimientos() {
           {
             type: 'bar',
             data: valores,
-            barWidth: 20,
+            barWidth: 50,
             itemStyle: {
               color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
                 { offset: 0, color: '#175cd3' },
@@ -245,6 +234,183 @@ function GraficaEstablecimientos() {
 
   return (
     <div className="vista-tabla vista-tabla--grafica">
+      <div className="vista-grafica" ref={contenedorRef} />
+    </div>
+  );
+}
+
+function GraficaScianEstablecimientos() {
+  const contenedorRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<echarts.EChartsType | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const [datos, setDatos] = useState<ScianEstablecimientos[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let activa = true;
+
+    async function cargarDatos() {
+      try {
+        setCargando(true);
+        setError(false);
+        const response = await obtenerScianEstablecimientos();
+        if (!activa) {
+          return;
+        }
+        const payload = Array.isArray(response) ? response : response?.data ?? [];
+        setDatos(payload);
+      } catch {
+        if (activa) {
+          setError(true);
+        }
+      } finally {
+        if (activa) {
+          setCargando(false);
+        }
+      }
+    }
+
+    void cargarDatos();
+
+    return () => {
+      activa = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const contenedor = contenedorRef.current;
+
+    if (!contenedor) {
+      return;
+    }
+
+    let chart = chartRef.current;
+
+    if (!chart) {
+      chart = echarts.init(contenedor);
+      chartRef.current = chart;
+    }
+
+    if (!resizeObserverRef.current) {
+      const resizeObserver = new ResizeObserver(() => {
+        chart?.resize();
+      });
+      resizeObserver.observe(contenedor);
+      resizeObserverRef.current = resizeObserver;
+    }
+
+    const datosOrdenados = [...datos].sort((a, b) => b.cantidad - a.cantidad);
+    const categorias = datosOrdenados.map((item) => item.nombre);
+    const valores = datosOrdenados.map((item) => item.cantidad);
+    const formatNumber = new Intl.NumberFormat('es-MX');
+    const total = categorias.length || 1;
+    const maxVisible = Math.min(8, total);
+    const endPercent = Math.round((maxVisible / total) * 100);
+
+    chart.setOption(
+      {
+        animationDuration: 500,
+        grid: { top: 8, right: 20, bottom: 12, left: 220, containLabel: false },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' },
+          formatter: (params: Array<{ name: string; value: number }>) => {
+            if (!params.length) {
+              return '';
+            }
+            const { name, value } = params[0];
+            return `${name}: ${formatNumber.format(value)}`;
+          },
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            yAxisIndex: 0,
+            start: 0,
+            end: endPercent,
+          },
+          {
+            type: 'slider',
+            yAxisIndex: 0,
+            start: 0,
+            end: endPercent,
+            right: 4,
+            width: 10,
+            height: '78%',
+            brushSelect: false,
+          },
+        ],
+        xAxis: {
+          type: 'value',
+          axisLabel: {
+            color: '#667085',
+            formatter: (valor: number) => formatNumber.format(valor),
+          },
+          splitLine: { lineStyle: { color: '#eef2f6' } },
+        },
+        yAxis: {
+          type: 'category',
+          data: categorias,
+          axisTick: { show: false },
+          axisLine: { show: false },
+          axisLabel: {
+            color: '#344054',
+            fontWeight: 600,
+            width: 200,
+            overflow: 'truncate',
+            ellipsis: '…',
+          },
+        },
+        series: [
+          {
+            type: 'bar',
+            data: valores,
+            barWidth: 18,
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                { offset: 0, color: '#0f766e' },
+                { offset: 1, color: '#5fd4c3' },
+              ]),
+              borderRadius: [10, 10, 10, 10],
+            },
+            label: {
+              show: true,
+              position: 'right',
+              color: '#101828',
+              fontWeight: 600,
+              formatter: (params: { value: number }) => formatNumber.format(params.value),
+            },
+          },
+        ],
+      },
+      true,
+    );
+  }, [datos]);
+
+  useEffect(() => {
+    return () => {
+      resizeObserverRef.current?.disconnect();
+      resizeObserverRef.current = null;
+      chartRef.current?.dispose();
+      chartRef.current = null;
+    };
+  }, []);
+
+  if (cargando) {
+    return <div className="vista-barras vista-barras--grafica">Cargando giros SCIAN...</div>;
+  }
+
+  if (error) {
+    return <div className="vista-barras vista-barras--grafica">No fue posible cargar la grafica.</div>;
+  }
+
+  if (datos.length === 0) {
+    return <div className="vista-barras vista-barras--grafica">No hay datos disponibles.</div>;
+  }
+
+  return (
+    <div className="vista-barras vista-barras--grafica">
       <div className="vista-grafica" ref={contenedorRef} />
     </div>
   );

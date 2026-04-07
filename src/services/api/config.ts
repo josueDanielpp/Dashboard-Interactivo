@@ -51,10 +51,15 @@ export const Config = {
   Maps: {
     GetMaps: createService('GET', '/v1/maps'),
     GetMapById: (id: string | number) => createService('GET', `/v1/maps/${id}`),
+    GetMapSld: (id: string | number) =>
+      createService('GET', `/v1/maps/${id}/sld`, undefined, {
+        Accept: 'application/xml',
+      }),
   },
   GeoNode: {
     Identify: <TData>(data: TData) => createService('POST', '/v1/geonode/identify', data),
     GetMunicipiosEstablecimientos: createService('GET', '/v1/geonode/municipios/establecimientos'),
+    GetScianEstablecimientos: createService('GET', '/v1/geonode/scian/establecimientos'),
   },
 };
 

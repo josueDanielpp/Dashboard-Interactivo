@@ -15,7 +15,11 @@ import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import { toast } from 'react-toastify';
-import { identificarEnGeoNode, obtenerMapasGeoserver, type MapaGeoserver } from '../../services/dashboardService';
+import {
+  identificarEnGeoNode,
+  obtenerMapasGeoserver,
+  type MapaGeoserver,
+} from '../../services/dashboardService';
 
 type PanelMapa = 'capas' | 'dibujar' | 'identificar' | 'simbologia' | 'fondo';
 type FondoMapa = 'osm' | 'claro' | 'oscuro';
@@ -33,6 +37,9 @@ interface ResultadoIdentificacion {
 }
 
 const CAMPOS_RECORD_IDENTIFICACION_IGNORADOS = new Set(['geom', 'id', 'oid_']);
+const MAPA_SLD_ID = 1;
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '');
+const sldUrl = `${apiBaseUrl}/v1/maps/${MAPA_SLD_ID}/sld`;
 
 const centroAguascalientes = fromLonLat([-102.296, 21.885]);
 const geoserverBaseUrl = import.meta.env.VITE_GEOSERVER_BASE_URL.replace(/\/$/, '');
@@ -325,13 +332,17 @@ export function MapaActividadEconomica() {
       return;
     }
 
+    const params: Record<string, unknown> = {
+      LAYERS: capasVisiblesIniciales.join(','),
+      TILED: true,
+    };
+
+    params.SLD = sldUrl;
+
     const layer = new TileLayer({
       source: new TileWMS({
         url: getWmsUrl(),
-        params: {
-          LAYERS: capasVisiblesIniciales.join(','),
-          TILED: true,
-        },
+        params,
         serverType: 'geoserver',
         transition: 0,
       }),
@@ -366,10 +377,14 @@ export function MapaActividadEconomica() {
       return;
     }
 
-    layer.getSource()?.updateParams({
+    const params: Record<string, unknown> = {
       LAYERS: capasVisiblesActuales.join(','),
       TILED: true,
-    });
+    };
+
+    params.SLD = sldUrl;
+
+    layer.getSource()?.updateParams(params);
   }, [capasMapa, capasVisibles]);
 
   useEffect(() => {

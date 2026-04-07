@@ -17,8 +17,8 @@ export const panelesIniciales: DefinicionPanel[] = [
   },
   {
     id: 'embudo',
-    titulo: 'Unidades por sector economico',
-    descripcion: 'Comparacion inicial entre los sectores con mayor presencia en el territorio.',
+    titulo: 'Establecimientos por giro SCIAN',
+    descripcion: 'Comparativa de giros con mayor numero de establecimientos registrados.',
     etiqueta: 'Sectores',
     variante: 'barras',
   },
