@@ -1,8 +1,10 @@
 import { Responsive, useContainerWidth } from 'react-grid-layout';
+import { useState } from 'react';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { disposicionesResponsivas, panelesIniciales } from './datosIniciales';
 import { PanelDashboard } from './PanelDashboard';
+import type { FiltroGeograficoRequest } from '../../services/dashboardService';
 
 interface TableroPrincipalProps {
   onCerrarSesion: () => void;
@@ -10,6 +12,7 @@ interface TableroPrincipalProps {
 
 export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
   const { containerRef, mounted, width } = useContainerWidth({ initialWidth: 1200 });
+  const [filtroGeografico, setFiltroGeografico] = useState<FiltroGeograficoRequest | null>(null);
 
   return (
     <main className="pagina-dashboard">
@@ -49,7 +52,11 @@ export function TableroPrincipal({ onCerrarSesion }: TableroPrincipalProps) {
           >
             {panelesIniciales.map((panel) => (
               <div key={panel.id}>
-                <PanelDashboard panel={panel} />
+                <PanelDashboard
+                  filtroGeografico={filtroGeografico}
+                  onActualizarFiltroGeografico={setFiltroGeografico}
+                  panel={panel}
+                />
               </div>
             ))}
           </Responsive>

@@ -595,6 +595,12 @@ select {
   min-height: 260px;
 }
 
+.vista-grafica__estado {
+  display: grid;
+  place-items: center;
+  min-height: 52px;
+}
+
 .vista-tabla__fila {
   display: grid;
   grid-template-columns: 90px minmax(180px, 1fr) 44px;
@@ -710,16 +716,22 @@ select {
 
 .vista-metricas {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
 }
 
 .tarjeta-metrica {
   display: grid;
-  gap: 4px;
-  padding: 14px;
-  border-radius: 14px;
+  gap: 3px;
+  padding: 12px;
+  border-radius: 12px;
   background: #f8fafc;
   border: 1px solid #e6ebf1;
+}
+
+.tarjeta-metrica--destacada {
+  grid-column: 1 / -1;
 }
 
 .tarjeta-metrica span,
@@ -728,8 +740,21 @@ select {
 }
 
 .tarjeta-metrica strong {
-  font-size: 1.6rem;
   color: #1d2939;
+}
+
+.tarjeta-metrica__valor--numero {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.tarjeta-metrica__valor--texto {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.tarjeta-metrica small {
+  font-size: 0.88rem;
 }
 
 @media (max-width: 900px) {
@@ -755,6 +780,10 @@ select {
     top: 66px;
     left: 10px;
     width: calc(100% - 20px);
+  }
+
+  .vista-metricas {
+    grid-template-columns: 1fr;
   }
 }
 

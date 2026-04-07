@@ -12,23 +12,17 @@ export const panelesIniciales: DefinicionPanel[] = [
     id: 'listado',
     titulo: 'Establecimientos por municipio',
     descripcion: 'Comparativa de establecimientos del DENUE por municipio en el estado.',
-    etiqueta: 'Directorio',
+    etiqueta: 'Municipio',
     variante: 'tabla',
   },
   {
     id: 'embudo',
     titulo: 'Establecimientos por giro SCIAN',
     descripcion: 'Comparativa de giros con mayor numero de establecimientos registrados.',
-    etiqueta: 'Sectores',
+    etiqueta: 'Giro',
     variante: 'barras',
   },
-  {
-    id: 'entidades',
-    titulo: 'Concentracion por municipio',
-    descripcion: 'Resumen comparativo para identificar los municipios con mayor actividad economica.',
-    etiqueta: 'Municipios',
-    variante: 'apilado',
-  },
+  
   {
     id: 'metricas',
     titulo: 'Indicadores clave del estado',
@@ -39,14 +33,28 @@ export const panelesIniciales: DefinicionPanel[] = [
 ];
 
 export const disposicionEscritorio: DisposicionPanel[] = [
-  { i: 'mapa', x: 0, y: 0, w: 7, h: 15, minW: 5, minH: 6 },
-  { i: 'listado', x: 7, y: 0, w: 5, h: 15, minW: 4, minH: 6 },
-  { i: 'embudo', x: 0, y: 9, w: 4, h: 5, minW: 3, minH: 4 },
-  { i: 'entidades', x: 4, y: 9, w: 5, h: 5, minW: 4, minH: 4 },
-  { i: 'metricas', x: 9, y: 9, w: 3, h: 5, minW: 3, minH: 4 },
+  { i: 'mapa', x: 0, y: 0, w: 7, h: 15, minW: 5, minH: 8 },
+  { i: 'metricas', x: 7, y: 0, w: 5, h: 7, minW: 4, minH: 5 },
+  { i: 'listado', x: 7, y: 7, w: 5, h: 8, minW: 4, minH: 6 },
+  { i: 'embudo', x: 0, y: 15, w: 12, h: 10, minW: 6, minH: 6 },
+];
+
+export const disposicionTablet: DisposicionPanel[] = [
+  { i: 'mapa', x: 0, y: 0, w: 10, h: 13, minW: 6, minH: 8 },
+  { i: 'metricas', x: 0, y: 13, w: 10, h: 6, minW: 5, minH: 5 },
+  { i: 'listado', x: 0, y: 19, w: 10, h: 8, minW: 5, minH: 6 },
+  { i: 'embudo', x: 0, y: 27, w: 10, h: 10, minW: 5, minH: 6 },
+];
+
+export const disposicionMovil: DisposicionPanel[] = [
+  { i: 'mapa', x: 0, y: 0, w: 6, h: 12, minH: 8 },
+  { i: 'metricas', x: 0, y: 12, w: 6, h: 6, minH: 5 },
+  { i: 'listado', x: 0, y: 18, w: 6, h: 8, minH: 6 },
+  { i: 'embudo', x: 0, y: 26, w: 6, h: 10, minH: 6 },
 ];
 
 export const disposicionesResponsivas = {
-  lg: disposicionEscritorio
- 
+  lg: disposicionEscritorio,
+  md: disposicionTablet,
+  sm: disposicionMovil,
 };

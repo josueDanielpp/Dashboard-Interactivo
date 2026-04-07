@@ -7,6 +7,30 @@ export interface ResumenDashboard {
   sectorDominante: string;
 }
 
+export interface KpiValorNumerico {
+  label: string;
+  value: number;
+}
+
+export interface KpiMunicipiosActividad extends KpiValorNumerico {
+  total: number;
+  coveragePercentage: number;
+}
+
+export interface KpiSectorDominante {
+  label: string;
+  value: string;
+  establishments: number;
+  sharePercentage: number;
+}
+
+export interface GeoNodeKpis {
+  schema: string;
+  unitsVisible: KpiValorNumerico;
+  municipalitiesWithActivity: KpiMunicipiosActividad;
+  dominantSector: KpiSectorDominante;
+}
+
 export interface MapaGeoserver {
   id: number;
   name: string;
@@ -22,6 +46,11 @@ export interface IdentifyRequest {
   wkt: string;
   schema: string;
   inputSrid: number;
+}
+
+export interface FiltroGeograficoRequest {
+  inputSrid?: number;
+  wkt?: string;
 }
 
 export interface MunicipioEstablecimientos {
@@ -81,14 +110,18 @@ export function identificarEnGeoNode(payload: IdentifyRequest) {
   return apiUtils<IdentifyResponse, IdentifyRequest>(Config.GeoNode.Identify(payload));
 }
 
-export function obtenerMunicipiosEstablecimientos() {
+export function obtenerMunicipiosEstablecimientos(payload: FiltroGeograficoRequest) {
   return apiUtils<MunicipioEstablecimientosResponse | MunicipioEstablecimientos[]>(
-    Config.GeoNode.GetMunicipiosEstablecimientos,
+    Config.GeoNode.GetMunicipiosEstablecimientos(payload),
   );
 }
 
-export function obtenerScianEstablecimientos() {
+export function obtenerScianEstablecimientos(payload: FiltroGeograficoRequest) {
   return apiUtils<ScianEstablecimientosResponse | ScianEstablecimientos[]>(
-    Config.GeoNode.GetScianEstablecimientos,
+    Config.GeoNode.GetScianEstablecimientos(payload),
   );
+}
+
+export function obtenerGeoNodeKpis() {
+  return apiUtils<GeoNodeKpis | { data?: GeoNodeKpis }>(Config.GeoNode.GetKpis);
 }

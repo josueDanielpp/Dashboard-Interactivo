@@ -1,5 +1,6 @@
 import apiUtils from './api/apiUtils';
 import Config from './api/config';
+import { cerrarSesionRemota, extraerAccessToken, refrescarSesion } from './authSession';
 
 export interface LoginRequest {
   email: string;
@@ -18,3 +19,5 @@ export interface LoginResponse {
 export function iniciarSesionRequest(payload: LoginRequest) {
   return apiUtils<LoginResponse, LoginRequest>(Config.Auth.Login(payload));
 }
+
+export { cerrarSesionRemota, extraerAccessToken, refrescarSesion };

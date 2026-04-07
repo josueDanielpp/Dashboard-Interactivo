@@ -5,21 +5,58 @@ import { ToastContainer, toast } from 'react-toastify';
 import './App.css';
 import { LoginPage } from './features/auth/LoginPage';
 import { PaginaDashboard } from './pages/PaginaDashboard';
-import { iniciarSesionRequest } from './services/authService';
-
-const CLAVE_SESION = 'dashboard-auth';
-const CLAVE_TOKEN = import.meta.env.VITE_AUTH_TOKEN_KEY;
+import {
+  cerrarSesionRemota,
+  extraerAccessToken,
+  iniciarSesionRequest,
+  refrescarSesion,
+} from './services/authService';
+import { registrarManejadorExpiracionSesion, setAccessToken } from './services/authSession';
 
 function App() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [sesionActiva, setSesionActiva] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const [validandoSesion, setValidandoSesion] = useState(true);
 
   useEffect(() => {
-    setSesionActiva(
-      localStorage.getItem(CLAVE_SESION) === 'ok' && Boolean(sessionStorage.getItem(CLAVE_TOKEN)),
-    );
+    let activa = true;
+
+    registrarManejadorExpiracionSesion(() => {
+      if (!activa) {
+        return;
+      }
+
+      setSesionActiva(false);
+      setContrasena('');
+      toast.info('Tu sesion expiro. Inicia sesion de nuevo.');
+    });
+
+    async function restaurarSesion() {
+      try {
+        await refrescarSesion();
+
+        if (activa) {
+          setSesionActiva(true);
+        }
+      } catch {
+        if (activa) {
+          setSesionActiva(false);
+        }
+      } finally {
+        if (activa) {
+          setValidandoSesion(false);
+        }
+      }
+    }
+
+    void restaurarSesion();
+
+    return () => {
+      activa = false;
+      registrarManejadorExpiracionSesion(null);
+    };
   }, []);
 
   async function iniciarSesion(event: FormEvent<HTMLFormElement>) {
@@ -33,16 +70,14 @@ function App() {
         password: contrasena,
       });
 
-      const token =
-        response.token ?? response.accessToken ?? response.access_token ?? response.jwt;
+      const token = extraerAccessToken(response);
 
       if (!token) {
         toast.error('El login respondio sin token. Revisa el formato de la API.');
         return;
       }
 
-      sessionStorage.setItem(CLAVE_TOKEN, token);
-      localStorage.setItem(CLAVE_SESION, 'ok');
+      setAccessToken(token);
       setSesionActiva(true);
       setContrasena('');
       toast.success('Sesion iniciada correctamente.');
@@ -64,15 +99,16 @@ function App() {
     }
   }
 
-  function cerrarSesion() {
-    localStorage.removeItem(CLAVE_SESION);
-    sessionStorage.removeItem(CLAVE_TOKEN);
-    setSesionActiva(false);
-    setContrasena('');
-  }
-
-  if (sesionActiva) {
-    return <PaginaDashboard onCerrarSesion={cerrarSesion} />;
+  async function cerrarSesion() {
+    try {
+      await cerrarSesionRemota();
+    } catch {
+      toast.error('No fue posible cerrar sesion en el servidor.');
+    } finally {
+      setAccessToken(null);
+      setSesionActiva(false);
+      setContrasena('');
+    }
   }
 
   return (
@@ -85,14 +121,18 @@ function App() {
         position="top-right"
         theme="colored"
       />
-      <LoginPage
-        contrasena={contrasena}
-        correo={correo}
-        enviando={enviando}
-        onCambiarContrasena={setContrasena}
-        onCambiarCorreo={setCorreo}
-        onSubmit={iniciarSesion}
-      />
+      {validandoSesion ? null : sesionActiva ? (
+        <PaginaDashboard onCerrarSesion={cerrarSesion} />
+      ) : (
+        <LoginPage
+          contrasena={contrasena}
+          correo={correo}
+          enviando={enviando}
+          onCambiarContrasena={setContrasena}
+          onCambiarCorreo={setCorreo}
+          onSubmit={iniciarSesion}
+        />
+      )}
     </>
   );
 }

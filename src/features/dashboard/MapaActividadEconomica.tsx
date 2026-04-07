@@ -14,10 +14,12 @@ import XYZ from 'ol/source/XYZ';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
+import WKT from 'ol/format/WKT';
 import { toast } from 'react-toastify';
 import {
   identificarEnGeoNode,
   obtenerMapasGeoserver,
+  type FiltroGeograficoRequest,
   type MapaGeoserver,
 } from '../../services/dashboardService';
 
@@ -193,7 +195,11 @@ function obtenerCapasWmsVisibles(capasMapa: CapaMapa[], capasVisibles: Record<st
     .map((capa) => capa.nombre);
 }
 
-export function MapaActividadEconomica() {
+export function MapaActividadEconomica({
+  onActualizarFiltroGeografico,
+}: {
+  onActualizarFiltroGeografico: (filtro: FiltroGeograficoRequest | null) => void;
+}) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const drawRef = useRef<Draw | null>(null);
@@ -423,6 +429,18 @@ export function MapaActividadEconomica() {
       capaDibujo.getSource()?.clear();
     });
 
+    draw.on('drawend', (event) => {
+      const wkt = new WKT().writeFeature(event.feature, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857',
+      });
+
+      onActualizarFiltroGeografico({
+        inputSrid: 4326,
+        wkt,
+      });
+    });
+
     map.addInteraction(draw);
     drawRef.current = draw;
 
@@ -430,7 +448,7 @@ export function MapaActividadEconomica() {
       map.removeInteraction(draw);
       drawRef.current = null;
     };
-  }, [modoDibujoActivo]);
+  }, [modoDibujoActivo, onActualizarFiltroGeografico]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -502,6 +520,7 @@ export function MapaActividadEconomica() {
 
   function limpiarDibujo() {
     capaDibujoRef.current?.getSource()?.clear();
+    onActualizarFiltroGeografico(null);
   }
 
   function alternarCapa(nombreCapa: string) {
@@ -583,13 +602,13 @@ export function MapaActividadEconomica() {
           >
             Identificar
           </button>
-          <button
+          {/* <button
             className={panelActivo === 'simbologia' ? 'mapa-tab mapa-tab--activo' : 'mapa-tab'}
             onClick={() => setPanelActivo('simbologia')}
             type="button"
           >
             Simbologia
-          </button>
+          </button> */}
           <button
             className={panelActivo === 'fondo' ? 'mapa-tab mapa-tab--activo' : 'mapa-tab'}
             onClick={() => setPanelActivo('fondo')}
