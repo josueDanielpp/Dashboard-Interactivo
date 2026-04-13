@@ -118,7 +118,8 @@
   gap: 8px;
 }
 
-.campo-login span {
+.campo-login span,
+.campo-login label {
   color: #344054;
   font-size: 0.92rem;
   font-weight: 600;
@@ -138,6 +139,50 @@
 .campo-login input:focus {
   border-color: #175cd3;
   box-shadow: 0 0 0 4px rgba(23, 92, 211, 0.12);
+}
+
+.campo-login__password {
+  position: relative;
+}
+
+.campo-login__password input {
+  padding-right: 54px;
+}
+
+.campo-login__toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #667085;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.campo-login__toggle-password:hover:not(:disabled),
+.campo-login__toggle-password:focus-visible {
+  background: #eef4ff;
+  color: #175cd3;
+  outline: none;
+}
+
+.campo-login__toggle-password:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.campo-login__toggle-password svg {
+  width: 20px;
+  height: 20px;
 }
 
 .formulario-login__error {

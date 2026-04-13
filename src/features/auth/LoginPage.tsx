@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import fondoAguascalientes from '../../assets/Images/ags.jpg';
 import './login.css';
 
@@ -20,6 +20,7 @@ export function LoginPage({
   onSubmit,
 }: LoginPageProps) {
   const mostrarAccesoDemo = import.meta.env.VITE_ENABLE_DEMO_LOGIN === 'true';
+  const [contrasenaVisible, setContrasenaVisible] = useState(false);
 
   return (
     <main className="pantalla-login">
@@ -64,17 +65,57 @@ export function LoginPage({
             />
           </label>
 
-          <label className="campo-login">
-            <span>Contraseña</span>
-            <input
-              autoComplete="current-password"
-              disabled={enviando}
-              onChange={(event) => onCambiarContrasena(event.target.value)}
-              placeholder="DashboardAgs2026!"
-              type="password"
-              value={contrasena}
-            />
-          </label>
+          <div className="campo-login">
+            <label htmlFor="contrasena">Contraseña</label>
+            <div className="campo-login__password">
+              <input
+                autoComplete="current-password"
+                disabled={enviando}
+                id="contrasena"
+                onChange={(event) => onCambiarContrasena(event.target.value)}
+                placeholder="DashboardAgs2026!"
+                type={contrasenaVisible ? 'text' : 'password'}
+                value={contrasena}
+              />
+              <button
+                aria-label={contrasenaVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                aria-pressed={contrasenaVisible}
+                className="campo-login__toggle-password"
+                disabled={enviando}
+                onClick={() => setContrasenaVisible((visible) => !visible)}
+                type="button"
+              >
+                {contrasenaVisible ? (
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                    <path
+                      d="M3 3l18 18M10.58 10.58a2 2 0 002.83 2.83M9.88 4.24A10.45 10.45 0 0112 4c5.52 0 9 5.5 9 8a6.35 6.35 0 01-1.46 2.96M6.21 6.21C4.22 7.55 3 10.1 3 12c0 2.5 3.48 8 9 8 1.77 0 3.33-.57 4.62-1.43"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                    />
+                  </svg>
+                ) : (
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                    <path
+                      d="M3 12c0-2.5 3.48-8 9-8s9 5.5 9 8-3.48 8-9 8-9-5.5-9-8z"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                    />
+                    <path
+                      d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
           <button className="formulario-login__boton" disabled={enviando} type="submit">
             {enviando ? 'Validando acceso...' : 'Entrar al dashboard'}
           </button>
